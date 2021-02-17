@@ -1,0 +1,156 @@
+﻿@using NetC.JuniorDeveloperExam.Web.Classes;
+@using NetC.JuniorDeveloperExam.Web.Classes;
+@model vmBlog
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 5 Considerations for a Content-First Design Approach - NetConstruct Blog</title>
+    <link rel="stylesheet" type="text/css" href="/Assets/Styles/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/Assets/Styles/custom.css" />
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">NetConstruct Blog</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/">
+                            Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li>
+                        <ul class="navbar-nav navbar-dark bg-dark">
+                            <li class="nav-item dropdown position-static">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Dropdown
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
+                                    @foreach (BlogPost blogPosts in Model.ListOfBlogPost)
+                                    {
+                                        if (blogPosts.id == Model.SelectedBlogPostID)
+                                        {
+                                            @Html.ActionLink(blogPosts.title, null, new { id = blogPosts.id }, new { @class = "dropdown-item active" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(blogPosts.title, null, new { id = blogPosts.id }, new { @class = "dropdown-item" })
+                                        }
+                                    }
+                                    @*<a class="dropdown-item" href="#">Action</a>
+        <a class="dropdown-item" href="#">Another action</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">Something else here</a>*@
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                   
+                </ul>
+                @*@Model.SelectedBlogPostID/@Model.ListOfBlogPost.Count()*@
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+
+            <!-- Blog post content -->
+            <div class="col-lg-12">
+
+                <!-- Title -->
+                <h1 class="mt-4">@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().title</h1>
+
+                <hr>
+
+                <!-- Date/Time -->
+                <p>@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().date</p>
+
+                <hr>
+
+                <!-- Preview Image -->
+                <img class="img-fluid rounded" src="@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().image" alt="@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().title">
+
+                <hr>
+
+                <!-- Post Content -->
+                @Html.Raw(Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().htmlContent)
+
+                <hr>
+
+                <!-- Blog post comment form -->
+                <div class="card my-4">
+                    <h5 class="card-header">Leave a Comment:</h5>
+                    <div class="card-body">
+                        @using (Html.BeginForm("Blogpost", "Blog", new { id = Model.SelectedBlogPostID }, FormMethod.Post, null))
+                        {
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label for="Name">Name</label>
+                                        <input required class="form-control" name="Name" id="Name" placeholder="Name">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="Email">Email</label>
+                                        <input required type="Email" class="form-control" name="Email" id="Email" placeholder="Email">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="Message">Message</label>
+                                    <textarea required id="Message" name="Message" class="form-control" rows="3"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                        }
+                    </div>
+                </div>
+
+
+                <!-- Blog post comments -->
+                @if (Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments != null)
+                            {
+                                var comments = Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments;
+                                for (int i = 0; i < comments.Count(); i++)
+                                {
+                        <div class="media mb-4">
+                            <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
+                            <div class="media-body">
+                                <h5 class="mt-0">@comments[i].name <small><em>(@comments[i].date)</em></small></h5>
+                                @comments[i].message
+                            </div>
+                            @*<button class="btn btn-primary">Reply</button>*@
+                        </div>
+
+                        @*if(i == 0)
+                        {
+                            <p>TODO reply uses javascript to inject section here</p>
+                        }*@
+
+                        if (i != comments.Count()-1)
+                        {
+                            <hr />
+                        }
+                }
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="/Assets/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="/Assets/Scripts/jquery.validate.min.js"></script>
+    <script src="/Assets/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/Assets/Scripts/unobtrusive-bootstrap.js"></script>
+    <script src="/Assets/Scripts/bootstrap.bundle.min.js"></script>
+</body>
+</html>

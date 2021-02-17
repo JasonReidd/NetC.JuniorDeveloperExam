@@ -1,0 +1,38 @@
+﻿PMC:
+Update-Package
+
+Web Config:
+Added <directoryBrowse enabled="true" /> to system.webServer>
+Added <relaxedUrlToFileSystemMapping="true" to  <httpRuntime>
+
+Route Config:
+Replaced public static void RegisterRoutes(RouteCollection routes)
+
+Project: Add controller folder
+Controller folder: Add BlogController
+Create view from BlogController
+
+
+
+Exercise 1
+x Create an MVC view containing the blog post content, use the HTML found within the template.html file as the page layout.
+
+x Using the provided JSON file, replace the section marked <!—Blog post content--> with content found in the Blog-Posts.json file.
+
+x Load in specific blog post from the JSON file, based on blog post ID (via MVC routing and appropriate controller actions) Example: /blog/1/, /blog/2/, /blog/<ID>/ etc....
+
+Exercise 2
+x Display a list of blog post comments that are related to the blog post, obtained from the JSON file. Add this to the section marked <!—Blog post comments-->
+
+Exercise 3
+x Add a comment form to the section marked <!—Blog post comment form--> that a user can use to submit a comment that is stored against the blog post item (within the Blogpost JSON).
+
+Form fields:
+Name (required field)
+Email address (required field)
+Comment (required field)
+
+Exercise 4 (Optional)
+Add the ability to reply to a comment, save the reply in the appropriate location of the JSON file, and display underneath the comment the user has replied to.
+
+Good luck!
