@@ -5,13 +5,24 @@ using System.Web;
 
 namespace NetC.JuniorDeveloperExam.Web.Classes
 {
-        public class Comment
+    public class Reply
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public DateTime date { get; set; }
+        public string emailAddress { get; set; }
+        public string message { get; set; }
+    }
+
+    public class Comment
         {
+            public int id { get; set; }
             public string name { get; set; }
             public DateTime date { get; set; }
             public string emailAddress { get; set; }
             public string message { get; set; }
-        }
+            public List<Reply> replies { get; set; }
+    }
 
         public class BlogPost
         {

@@ -33,6 +33,10 @@ Email address (required field)
 Comment (required field)
 
 Exercise 4 (Optional)
-Add the ability to reply to a comment, save the reply in the appropriate location of the JSON file, and display underneath the comment the user has replied to.
+x Add the ability to reply to a comment, save the reply in the appropriate location of the JSON file, and display underneath the comment the user has replied to.
 
 Good luck!
+
+TOTO
+Function to tidy JSON file
+Initial reply button should become a x close reply when reply open

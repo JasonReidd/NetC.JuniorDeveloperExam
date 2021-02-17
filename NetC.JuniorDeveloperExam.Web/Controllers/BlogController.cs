@@ -10,7 +10,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
     {
         // mysite
         // mysite/Blog
-        // mysite/Blog/Blogpost/{1?}
+        // mysite/Blog/BlogPost/{1?}
         /// <summary>
         /// Displays blog. Defaults to first if no valid id given
         /// </summary>
@@ -26,6 +26,27 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             {
                 id = 1;//SelectedBlogPostID
             }
+
+            //fix comment IDs and allow coments to have replies
+            var newid = 0;
+            foreach (BlogPost blogPosts in rootObj.blogPosts)
+            {
+                if (blogPosts.comments == null)
+                {
+                    blogPosts.comments = new List<Comment>();
+                }
+                foreach (Comment comment in blogPosts.comments)
+                {
+                    if (comment.replies == null)
+                    {
+                        comment.replies = new List<Reply>();
+                    }
+                    comment.id = newid;
+                    newid++;
+                }
+
+            }
+
             //creates a view model
             vmBlog model = new vmBlog()
             {
@@ -42,7 +63,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         /// <param name="formData">Contains Comment</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult BlogPost(int id, FormData formData)
+        public ActionResult BlogPostComment(int id, FormData formData)
         {
             //gets content from Blog-Posts.json
             var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
@@ -50,17 +71,48 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             //adds new comment to content
             rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Add(new Comment()
             {
+                id = rootObj.blogPosts.Last().comments.Last().id, // temperary fix, max & any aggregate
                 name = formData.Name,
                 emailAddress = formData.Email,
                 message = formData.Message,
 
                 date = formData.Date,
-            });
+            }) ;
             //saves content to Blog-Posts.json
             var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
                 System.IO.File.WriteAllText(path, convertedJson);
             //redirect to Blog and retain id
             return RedirectToAction("BlogPost", "Blog", new { id = id });          
+        }
+
+        [HttpPost]
+        public ActionResult CommentReply(int id, int commentId, FormData formData)
+        {
+            //gets content from Blog-Posts.json
+            var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
+            Root rootObj = JsonConvert.DeserializeObject<Root>(System.IO.File.ReadAllText(path));
+            //adds new comment to content
+
+            if(rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Where(c => c.id == commentId).FirstOrDefault().replies == null)
+            {
+                rootObj.blogPosts
+                    .Where(bp => bp.id == id).FirstOrDefault().comments
+                    .Where(c => c.id == commentId).FirstOrDefault().replies
+                    = new List<Reply>();
+            }
+
+            rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Where(c => c.id == commentId).FirstOrDefault().replies.Add(new Reply()
+            {
+                name = formData.Name,
+                emailAddress = formData.Email,
+                message = formData.Message,
+                date = formData.Date,
+            });
+            //saves content to Blog-Posts.json
+            var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
+            System.IO.File.WriteAllText(path, convertedJson);
+            //redirect to Blog and retain id
+            return RedirectToAction("BlogPost", "Blog", new { id = id });
         }
     }
 }
