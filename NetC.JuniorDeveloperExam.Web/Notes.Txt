@@ -1,42 +1,113 @@
-﻿PMC:
-Update-Package
-
+﻿Initial chnages to application for it to run:
+PMC:
+'Update-Package'
 Web Config:
-Added <directoryBrowse enabled="true" /> to system.webServer>
-Added <relaxedUrlToFileSystemMapping="true" to  <httpRuntime>
-
+Added <directoryBrowse enabled="true" /> to <system.webServer>
+Added <relaxedUrlToFileSystemMapping="true" to <httpRuntime>
 Route Config:
-Replaced public static void RegisterRoutes(RouteCollection routes)
+Replaced 'public static void RegisterRoutes(RouteCollection routes)'
 
-Project: Add controller folder
-Controller folder: Add BlogController
-Create view from BlogController
+----------Requirments:
+Users able to view specific blog posts, comment on specific blog posts and reply to specific comments.
 
-
-
-Exercise 1
-x Create an MVC view containing the blog post content, use the HTML found within the template.html file as the page layout.
-
-x Using the provided JSON file, replace the section marked <!—Blog post content--> with content found in the Blog-Posts.json file.
-
-x Load in specific blog post from the JSON file, based on blog post ID (via MVC routing and appropriate controller actions) Example: /blog/1/, /blog/2/, /blog/<ID>/ etc....
-
-Exercise 2
-x Display a list of blog post comments that are related to the blog post, obtained from the JSON file. Add this to the section marked <!—Blog post comments-->
-
-Exercise 3
-x Add a comment form to the section marked <!—Blog post comment form--> that a user can use to submit a comment that is stored against the blog post item (within the Blogpost JSON).
-
+Functional Requirements:
+1.1 Load in specific blog post from the JSON file, based on blog post ID (via MVC routing and appropriate controller actions) Example: /blog/1/, /blog/2/, /blog/<ID>/ etc....
+1.2 Display a list of blog post comments that are related to the blog post, obtained from the JSON file. Add this to the section marked <!—Blog post comments-->
+1.3 Add a comment form to the section marked <!—Blog post comment form--> that a user can use to submit a comment that is stored against the blog post item (within the Blogpost JSON).
+Form fields:
+Name (required field)
+Email address (required field)
+Comment (required field)
+1.4 Add the ability to reply to a comment, save the reply in the appropriate location of the JSON file, and display underneath the comment the user has replied to.
 Form fields:
 Name (required field)
 Email address (required field)
 Comment (required field)
 
-Exercise 4 (Optional)
-x Add the ability to reply to a comment, save the reply in the appropriate location of the JSON file, and display underneath the comment the user has replied to.
+Non-Functional Requirements:
+2.1 Fast and reliable
+2.2 User freindly design
+2.3 Main features of the site should be functional without Javascript enabled. 
+2.4 When Javascript is disabled the user should be informed.
+2.5 Compatible with modern browsers
+2.6 Meets web accessibility testing standards
 
-Good luck!
+----------Tests:
+1.1 Navigate to mysite/Blog/BlogPost/2
+Expected: Blog Post "Introducing Ben" (id=2) displayed. PASSED
 
-TOTO
-Function to tidy JSON file
-Initial reply button should become a x close reply when reply open
+1.2 Navigate to mysite/Blog/BlogPost/1. Navigate to mysite/Blog/BlogPost/2
+Expected: Comments for Blog Post 1 displayed, comments, Blog Post 2 (or non), displayed. PASSED
+
+1.3 Fill in the form with Name, Email and Comment for Comment. Click submit.
+Exspected: Display the Blog Post that was commented on, comment displayed with all details visable and date of submitted. PASSED
+1.3.1 Attempt test 1.3 without Name.
+Exspected: Unable to submit: PASSED
+1.3.2 Attempt test 1.3 without Email.
+Exspected: Unable to submit: PASSED
+1.3.3 Attempt test 1.3 without Comment.
+Exspected: Unable to submit: PASSED
+
+1.4 CLick reply to show Reply Box for a Comment. Fill in the form with Name, Email and Comment for Reply. Click submit.
+Exspected: Display the Blog Post that was commented on, reply dislayed under comment with all details visable and date of submitted. PASSED
+1.4.1 Attempt test 1.4 without Name.
+Exspected: Unable to submit: PASSED
+1.4.2 Attempt test 1.4 without Email.
+Exspected: Unable to submit: PASSED
+1.4.3 Attempt test 1.4 without Comment.
+Exspected: Unable to submit: PASSED
+
+2.1 Repeat tests 1.1-1.4.3.
+No process takes over 3 seconds: PASSED
+
+2.2 Ask a collegue to repleat tests
+Able to preform each tasks and provided possitive feedback: PASSED
+
+2.3 Launch Application. Disable JS on edge://settings/content/javascript. Refresh Application. Repeat tests 1.1-1.3.3.
+Exspected Pass all: PASSED
+
+2.4 Launch Application. Disable JS on edge://settings/content/javascript. Refresh Application
+Exspected: Javascript is disabled message displayed, any Javascript buttons hidde. PASSED
+
+2.5 Chrome. Repeat tests 1.1-1.4.3 (tested edge as default in intial tests, other browsers not permited at work.)
+Exspected Pass all: PASSED
+2.5.1 IE. Repeat tests 1.1-1.4.3
+Exspected Pass all: PASSED
+
+2.6 axe - Web Accessibility Testing. F12, Axe. Scan webpage
+Exspected: No critical or serious issues. PASSED
+
+----------User Guide Draft:
+Accessing Blog Posts:
+To access diffrent blog post, select the title of the post from the use the "Blog Posts" dropdown. [image of site with Blog posts highlighted]
+On smaller/mobile devices you may neen to click [image of icon] the icon to exspand the navigation bar.
+
+Commenting on Blog Posts:
+In the section titled "Leave a Comment" fill in your Username, Password and Message in the specified feilds and click the "Comment" button.
+Please note that Username, Password and Message are all required feilds.
+[Image of "Leave a Comment" with example Username, Password and Message with pointer over comment button]
+
+Replying to Comments:
+To reply to comments on the site please enable Javascript (scripting) in your browser. 
+If you are connected to a domain, you may have to ask for group policy permission.
+
+Next to the comment you wish to reply to click the "Reply" button
+[Image of comment with pointer over Reply button]
+
+In the section titled "Leave a Reply" fill in your Username, Password and Message in the specified feilds and click the "Reply" button.
+Please note that Username, Password and Message are all required feilds.
+[Image of "Leave a Reply" with example Username, Password and Message with pointer over Reply button]
+
+----------Technical Guide Draft:
+.NET Framework 4.8
+Data is stored inside App_Data\Blog-Posts.json
+The application is checked into source controll on github 
+https://github.com/jasonhreid/NetC.JuniorDeveloperExam 
+Web host Server: ISS local host.
+Data Server: Within the appliaction.
+Custom Error pages can be disables in web.config to see errors
+
+----------Future Improvements:
+Treat this application as a prototype and create a application using entity framework to create a code first database.
+Impliment .net users so that emails are tied to a password protected account.
+Impliment React for further Javascript functionailty.

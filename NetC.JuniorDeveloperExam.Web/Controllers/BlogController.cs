@@ -27,7 +27,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                 id = 1;//SelectedBlogPostID
             }
 
-            //fix comment IDs and allow coments to have replies
+            //Add comment IDs and list<Reply> to Comment to allow them to be replied to
             var newid = 0;
             foreach (BlogPost blogPosts in rootObj.blogPosts)
             {
@@ -44,6 +44,8 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                     comment.id = newid;
                     newid++;
                 }
+                var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
+                System.IO.File.WriteAllText(path, convertedJson);
 
             }
 
@@ -65,42 +67,69 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         [HttpPost]
         public ActionResult BlogPostComment(int id, FormData formData)
         {
+            //serverside validation 
+            if (!Helper.containsNoNulls(formData))
+            {
+                throw new System.Exception("Form Validation Error.");
+            }
+            if (!Helper.IsValidEmail(formData.Email))
+            {
+                throw new System.Exception("Email Validation Error.");
+            }
+
             //gets content from Blog-Posts.json
             var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
             Root rootObj = JsonConvert.DeserializeObject<Root>(System.IO.File.ReadAllText(path));
             //adds new comment to content
+
+            List<Comment> aggregate = new List<Comment>();
+            foreach (BlogPost blogPost in rootObj.blogPosts)
+            {
+                if (blogPost.comments != null)
+                {
+                    aggregate.AddRange(blogPost.comments);
+                }
+            }
+
             rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Add(new Comment()
             {
-                id = rootObj.blogPosts.Last().comments.Last().id, // temperary fix, max & any aggregate
+                id = aggregate.Max(a => a.id) + 1,
                 name = formData.Name,
                 emailAddress = formData.Email,
                 message = formData.Message,
-
                 date = formData.Date,
-            }) ;
+                replies = new List<Reply>()
+            });
             //saves content to Blog-Posts.json
             var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
-                System.IO.File.WriteAllText(path, convertedJson);
+            System.IO.File.WriteAllText(path, convertedJson);
             //redirect to Blog and retain id
-            return RedirectToAction("BlogPost", "Blog", new { id = id });          
+            return RedirectToAction("BlogPost", "Blog", new { id = id });
         }
 
+        /// <summary>
+        ///  Saves reply and returns to current Blog.
+        /// </summary>
+        /// <param name="id">SelectedBlogPostID</param>
+        /// <param name="commentId"></param>
+        /// <param name="formData">Contains Reply</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult CommentReply(int id, int commentId, FormData formData)
         {
+            //serverside validation 
+            if (!Helper.containsNoNulls(formData))
+            {
+                throw new System.Exception("Form Validation Error.");
+            }
+            if (!Helper.IsValidEmail(formData.Email))
+            {
+                throw new System.Exception("Email Validation Error.");
+            }
             //gets content from Blog-Posts.json
             var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
             Root rootObj = JsonConvert.DeserializeObject<Root>(System.IO.File.ReadAllText(path));
             //adds new comment to content
-
-            if(rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Where(c => c.id == commentId).FirstOrDefault().replies == null)
-            {
-                rootObj.blogPosts
-                    .Where(bp => bp.id == id).FirstOrDefault().comments
-                    .Where(c => c.id == commentId).FirstOrDefault().replies
-                    = new List<Reply>();
-            }
-
             rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Where(c => c.id == commentId).FirstOrDefault().replies.Add(new Reply()
             {
                 name = formData.Name,
@@ -114,5 +143,6 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             //redirect to Blog and retain id
             return RedirectToAction("BlogPost", "Blog", new { id = id });
         }
+
     }
 }

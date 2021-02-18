@@ -106,6 +106,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\Forms.cs" />
+    <Compile Include="Classes\Helper.cs" />
     <Compile Include="Classes\Models.cs" />
     <Compile Include="Classes\vmBlog.cs" />
     <Compile Include="Controllers\BlogController.cs" />

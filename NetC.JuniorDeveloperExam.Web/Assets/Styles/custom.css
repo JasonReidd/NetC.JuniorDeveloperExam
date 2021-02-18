@@ -5,3 +5,34 @@
 .user-avatar {
     max-width: 50px;
 }
+
+/*JavaScript*/
+
+/*removed if Javascript Enabled*/
+.jsDisabledShow {
+/*Warning*/
+    display: block !important;
+}
+.jsDisabledHide {
+/*JS buttons*/
+    display: none !important;
+}
+
+/*added by JS*/
+.activeReply {
+    display: block !important;
+}
+
+.activeReplyBtn{
+    display: none !important;
+}
+
+/*Accessability*/
+a {
+    color: #2700ff;
+}
+
+.btn-primary {
+    background-color: #2700ff;
+    border-color: #2700ff;
+}
