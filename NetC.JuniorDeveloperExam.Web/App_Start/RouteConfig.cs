@@ -11,7 +11,7 @@ namespace NetC.JuniorDeveloperExam.Web
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Blog", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Blog", action = "BlogPost", id = UrlParameter.Optional }
             );
 
             // 404 Routing

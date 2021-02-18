@@ -15,7 +15,7 @@ namespace NetC.JuniorDeveloperExam.Web.Classes
         /// </summary>
         /// <param name="formData">Comment/reply data</param>
         /// <returns></returns>
-        public static bool containsNoNulls(FormData formData)
+        public static bool ContainsNoNulls(FormData formData)
         {
             if (formData != null)
             {
@@ -56,14 +56,18 @@ namespace NetC.JuniorDeveloperExam.Web.Classes
                     return match.Groups[1].Value + domainName;
                 }
             }
+
+            #pragma warning disable CS0168 // Variable is declared but never used
             catch (RegexMatchTimeoutException e)
             {
                 return false;
             }
-            catch (ArgumentException e)
+            
+            catch (ArgumentException e)            
             {
                 return false;
             }
+            #pragma warning restore CS0168 // Variable is declared but never used
 
             try
             {

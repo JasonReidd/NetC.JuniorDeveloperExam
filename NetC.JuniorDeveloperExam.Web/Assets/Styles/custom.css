@@ -36,3 +36,11 @@ a {
     background-color: #2700ff;
     border-color: #2700ff;
 }
+
+.dropdown-item.active, .dropdown-item:active {
+    background-color: #2700ff;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: white;
+}

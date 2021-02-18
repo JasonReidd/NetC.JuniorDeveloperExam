@@ -20,7 +20,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         public ActionResult Index()
         {
             TempData["Error"] = "Error.";
-            return RedirectToAction("Index", "Blog", new { id = 1 });
+            return RedirectToAction("BlogPost", "Blog", new { id = 1 });
         }
 
         // mysite/Error/BadRequest
@@ -31,7 +31,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         public ActionResult BadRequest()
         {
             TempData["Error"] = "Bad Request.";
-            return RedirectToAction("Index", "Blog", new { id = 1 });
+            return RedirectToAction("BlogPost", "Blog", new { id = 1 });
         }
 
         // mysite/Error/NotFound
@@ -42,7 +42,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         public ActionResult NotFound()
         {
             TempData["Error"] = "Page Not Found.";
-            return RedirectToAction("Index", "Blog", new { id = 1 });
+            return RedirectToAction("BlogPost", "Blog", new { id = 1 });
         }
 
         // mysite/Error/InternalError
@@ -53,7 +53,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         public ActionResult InternalError()
         {
             TempData["Error"] = "Internal Error.";
-            return RedirectToAction("Index", "Blog", new { id = 1 });
+            return RedirectToAction("BlogPost", "Blog", new { id = 1 });
         }
     }
 }

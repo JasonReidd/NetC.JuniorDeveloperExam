@@ -10,13 +10,13 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
     {
         // mysite
         // mysite/Blog
-        // mysite/Blog/Index/{1?}
+        // mysite/Blog/BlogPost/{1?}
         /// <summary>
         /// Displays blog. Defaults to first if no valid id given
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Index(int id = 1)
+        public ActionResult BlogPost(int id = 1)
         {
             //gets content from Blog-Posts.json
             Helper helper = new Helper();
@@ -24,9 +24,10 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             Root rootObj = JsonConvert.DeserializeObject<Root>(helper.JSONRead(path));
 
             //if invalid id (SelectedBlogPostID) default to 1
-            if (rootObj.blogPosts.Where(bp => bp.id == id) == null)
+            if (rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault() == null)
             {
-                id = 1;//SelectedBlogPostID
+                TempData["Error"] = "Blog Post Not Found.";        
+                return RedirectToAction("BlogPost", "Blog", new { id = 1 });//used rather than chnaging the id so on refresh the error doesn't persist
             }
 
             //Add comment IDs and list<Reply> to Comment to allow them to be replied to
@@ -57,6 +58,11 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                 ListOfBlogPost = rootObj.blogPosts,
                 SelectedBlogPostID = id
             };
+
+            //Populate Viewbag
+            ViewBag.Error = TempData["Error"];
+            ViewBag.blogPosts = model.ListOfBlogPost;
+            ViewBag.SelectedBlogPostID = model.SelectedBlogPostID;
             return View(model);
         }
 
@@ -70,7 +76,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         public ActionResult BlogPostComment(int id, FormData formData)
         {
             //serverside validation 
-            if (!Helper.containsNoNulls(formData))
+            if (!Helper.ContainsNoNulls(formData))
             {
                 throw new System.Exception("Form Validation Error.");
             }
@@ -109,7 +115,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
             helper.JSONWrite(path, convertedJson);
             //redirect to Blog and retain id
-            return RedirectToAction("Index", "Blog", new { id = id });
+            return RedirectToAction("BlogPost", "Blog", new { id });
         }
 
         /// <summary>
@@ -123,15 +129,15 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
         public ActionResult CommentReply(int id, int commentId, FormData formData)
         {
             //serverside validation 
-            if (!Helper.containsNoNulls(formData))
+            if (!Helper.ContainsNoNulls(formData))
             {
                 TempData["Error"] = "Form Validation Error.";
-                return RedirectToAction("Index", "Blog", new { id = 1 });
+                return RedirectToAction("BlogPost", "Blog", new { id = 1 });
             }
             if (!Helper.IsValidEmail(formData.Email))
             {
                 TempData["Error"] = "Email Validation Error.";
-                return RedirectToAction("Index", "Blog", new { id = 1 });
+                return RedirectToAction("BlogPost", "Blog", new { id = 1 });
             }
 
             //gets content from Blog-Posts.json
@@ -153,7 +159,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             helper.JSONWrite(path, convertedJson);
 
             //redirect to Blog and retain id
-            return RedirectToAction("Index", "Blog", new { id = id });
+            return RedirectToAction("BlogPost", "Blog", new { id });
         }
     }
 }

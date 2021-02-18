@@ -75,7 +75,13 @@ Expected Pass all: PASSED
 Expected Pass all: PASSED
 
 2.6 axe - Web Accessibility Testing. F12, Axe. Scan webpage
-Expected: No critical or serious issues. PASSED
+Expected: No issues. PASSED ('Congratulations! axe found (0) issues')
+
+a - Navigate to mysite/Blog/BlogPost/9999. 
+Expected: Redirect to Blog Post 1. Blog not found message. PASSED
+
+b - Navigate to mysite/AAAA. 
+Expected: Redirect to Blog Post 1. Page found message. PASSED
 
 ----------User Guide Draft:
 Accessing Blog Posts:
@@ -108,10 +114,6 @@ Data Server: Within the application.
 Custom Error pages can be enabled/disabled in web.config to see errors
 
 ----------Future Improvements:
-Treat this application as a prototype and create an application using entity framework to create a code first database.
-
 Implement .net users so that emails are tied to a password protected account.
-Implement React.
-Use navigation in _Layout with dropdown by viewbags.
-Fix issues when customErrors mode="On", currently repeatedly loads same page then gives 404.
-
+Move to a SQL Database backend, code first using the same class structure.
+Use of Ajax or migration to Blazor to update specific parts of page rather than requiring refresh, e.g. when commenting.

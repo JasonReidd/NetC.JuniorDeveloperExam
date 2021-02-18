@@ -5,6 +5,7 @@ using System.Web;
 
 namespace NetC.JuniorDeveloperExam.Web.Classes
 {
+    #pragma warning disable IDE1006 // Naming Styles
     public class Reply
     {
         public int id { get; set; }
@@ -41,4 +42,5 @@ namespace NetC.JuniorDeveloperExam.Web.Classes
     {
         public List<BlogPost> blogPosts { get; set; }
     }
+    #pragma warning restore IDE1006 // Naming Styles
 }

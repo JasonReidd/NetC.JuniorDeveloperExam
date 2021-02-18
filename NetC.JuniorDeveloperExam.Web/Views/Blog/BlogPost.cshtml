@@ -6,68 +6,24 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" type="text/css" href="/Assets/Styles/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/Assets/Styles/custom.css" />
-</head>
+<main onload="jsCheckDisabled()">
+    <!-- Navigation is in Layout using viewbag-->
 
-<body onload="jsCheckDisabled()">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="/">NetConstruct Blog</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="/">
-                            Home
-                            <span class="sr-only">(current)</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <ul class="navbar-nav navbar-dark bg-dark">
-                            <li class="nav-item dropdown position-static">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Blog Posts
-                                </a>
-
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
-                                    @foreach (BlogPost blogPosts in Model.ListOfBlogPost)
-                                    {
-                                        if (blogPosts.id == Model.SelectedBlogPostID)
-                                        {
-                                            @Html.ActionLink(blogPosts.title, null, new { id = blogPosts.id }, new { @class = "dropdown-item active" })
-                                        }
-                                        else
-                                        {
-                                            @Html.ActionLink(blogPosts.title, null, new { id = blogPosts.id }, new { @class = "dropdown-item" })
-                                        }
-                                    }
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    @ViewBag.Error
 
     <div class="container">
         <div class="row">
             <!-- Blog post content -->
             <div class="col-lg-12">
+
+                <!-- Display Viewbag Error from TempData -->
+                @if (ViewBag.Error != null)
+                {
+                    <div class="card my-4">
+                        <span class="card-header">@ViewBag.Error</span>
+                    </div>
+                }
+
                 <!-- Title -->
                 <h1 class="mt-4">@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().title</h1>
                 <hr>
@@ -86,7 +42,7 @@
 
                 <!-- Blog post comment form -->
                 <div class="card my-4">
-                    <h5 class="card-header">Leave a Comment:</h5>
+                    <h4 class="card-header">Leave a Comment:</h4>
                     <div class="card-body">
                         @using (Html.BeginForm("BlogPostComment", "Blog", new { id = Model.SelectedBlogPostID }, FormMethod.Post, null))
                         {
@@ -117,23 +73,23 @@
 
                 @if (Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments != null)
                 {
-                     var comments = Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments;
-                     //for (int i = 0; i < comments.Count(); i++)
-                     for (int i = comments.Count() - 1; i >= 0; i--)
-                     {
-                         <div class="media mb-4" id="@comments[i].id">
-                             <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
-                                <div class="media-body">
-                                    <h5 class="mt-0">@comments[i].name <small><em>(@comments[i].date)</em></small></h5>
-                                    @comments[i].message
-                                </div>
-                             <button id="@("ReplyBtn"+comments[i].id)" class="btn btn-primary jsDisabledHide" onclick="Reply(@comments[i].id)">Reply</button>
-                         </div>
+                    var comments = Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments;
+                    //for (int i = 0; i < comments.Count(); i++)
+                    for (int i = comments.Count() - 1; i >= 0; i--)
+                    {
+                        <div class="media mb-4" id="@comments[i].id">
+                            <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
+                            <div class="media-body">
+                                <h5 class="mt-0">@comments[i].name <small><em>(@comments[i].date)</em></small></h5>
+                                @comments[i].message
+                            </div>
+                            <button id="@("ReplyBtn"+comments[i].id)" class="btn btn-primary jsDisabledHide" onclick="Reply(@comments[i].id)">Reply</button>
+                        </div>
 
 
                         //  <!-- Comment reply form -->
                         <div class="card my-3 reply-box d-none" id="@("Reply"+comments[i].id)">
-                            <h5 class="card-header">Leave a Reply:</h5>
+                            <h4 class="card-header">Leave a Reply:</h4>
                             <div class="card-body">
                                 @using (Html.BeginForm("CommentReply", "Blog", new { id = Model.SelectedBlogPostID, commentId = comments[i].id }, FormMethod.Post, null))
                                 {
@@ -157,21 +113,21 @@
                             </div>
                         </div>
 
-                         if (comments[i].replies != null)
-                         {
+                        if (comments[i].replies != null)
+                        {
                             <div style="padding-left: 1.25em">
-                                 @foreach (Reply reply in comments[i].replies.OrderByDescending(c => c.date).ToList())
-                                 {
-                                     <div class="media mb-4">
-                                         <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
-                                         <div class="media-body">
-                                             <h5 class="mt-0">@reply.name <small><em>(@reply.date)</em></small></h5>
-                                             @reply.message
-                                         </div>
-                                     </div>
-                                 }
-                             </div>
-                         }
+                                @foreach (Reply reply in comments[i].replies.OrderByDescending(c => c.date).ToList())
+                                {
+                                    <div class="media mb-4">
+                                        <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">@reply.name <small><em>(@reply.date)</em></small></h5>
+                                            @reply.message
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
 
                         //Seperates comments, but doesn't add hr after last comment
                         if (i != 0)
@@ -183,12 +139,10 @@
             </div>
         </div>
     </div>
-
-    <script src="/Assets/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="/Assets/Scripts/jquery.validate.min.js"></script>
-    <script src="/Assets/Scripts/jquery.validate.unobtrusive.min.js"></script>
-    <script src="/Assets/Scripts/unobtrusive-bootstrap.js"></script>
-    <script src="/Assets/Scripts/bootstrap.bundle.min.js"></script>
+    @* Load JS and execute jsCheckDisabled() *@
     <script src="~/Assets/Scripts/Reply.js"></script>
-</body>
-</html>
+    <script type="text/javascript">
+        jsCheckDisabled();
+    </script>
+</main>
+
