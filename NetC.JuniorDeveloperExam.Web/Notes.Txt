@@ -1,4 +1,4 @@
-﻿Initial chnages to application for it to run:
+﻿Initial changes to application for it to run:
 PMC:
 'Update-Package'
 Web Config:
@@ -7,7 +7,7 @@ Added <relaxedUrlToFileSystemMapping="true" to <httpRuntime>
 Route Config:
 Replaced 'public static void RegisterRoutes(RouteCollection routes)'
 
-----------Requirments:
+----------Requirements:
 Users able to view specific blog posts, comment on specific blog posts and reply to specific comments.
 
 Functional Requirements:
@@ -26,9 +26,9 @@ Comment (required field)
 
 Non-Functional Requirements:
 2.1 Fast and reliable
-2.2 User freindly design
-2.3 Main features of the site should be functional without Javascript enabled. 
-2.4 When Javascript is disabled the user should be informed.
+2.2 User friendly design
+2.3 Main features of the site should be functional without JavaScript enabled. 
+2.4 When JavaScript is disabled the user should be informed.
 2.5 Compatible with modern browsers
 2.6 Meets web accessibility testing standards
 
@@ -40,74 +40,78 @@ Expected: Blog Post "Introducing Ben" (id=2) displayed. PASSED
 Expected: Comments for Blog Post 1 displayed, comments, Blog Post 2 (or non), displayed. PASSED
 
 1.3 Fill in the form with Name, Email and Comment for Comment. Click submit.
-Exspected: Display the Blog Post that was commented on, comment displayed with all details visable and date of submitted. PASSED
+Expected: Display the Blog Post that was commented on, comment displayed with all details visible and date of submitted. PASSED
 1.3.1 Attempt test 1.3 without Name.
-Exspected: Unable to submit: PASSED
+Expected: Unable to submit: PASSED
 1.3.2 Attempt test 1.3 without Email.
-Exspected: Unable to submit: PASSED
+Expected: Unable to submit: PASSED
 1.3.3 Attempt test 1.3 without Comment.
-Exspected: Unable to submit: PASSED
+Expected: Unable to submit: PASSED
 
-1.4 CLick reply to show Reply Box for a Comment. Fill in the form with Name, Email and Comment for Reply. Click submit.
-Exspected: Display the Blog Post that was commented on, reply dislayed under comment with all details visable and date of submitted. PASSED
+1.4 Click reply to show Reply Box for a Comment. Fill in the form with Name, Email and Comment for Reply. Click submit.
+Expected: Display the Blog Post that was commented on, reply dislayed under comment with all details visible and date of submitted. PASSED
 1.4.1 Attempt test 1.4 without Name.
-Exspected: Unable to submit: PASSED
+Expected: Unable to submit: PASSED
 1.4.2 Attempt test 1.4 without Email.
-Exspected: Unable to submit: PASSED
+Expected: Unable to submit: PASSED
 1.4.3 Attempt test 1.4 without Comment.
-Exspected: Unable to submit: PASSED
+Expected: Unable to submit: PASSED
 
 2.1 Repeat tests 1.1-1.4.3.
 No process takes over 3 seconds: PASSED
 
-2.2 Ask a collegue to repleat tests
-Able to preform each tasks and provided possitive feedback: PASSED
+2.2 Ask a colleague to repeat tests
+Able to perform each task and provided positive feedback: PASSED
 
 2.3 Launch Application. Disable JS on edge://settings/content/javascript. Refresh Application. Repeat tests 1.1-1.3.3.
-Exspected Pass all: PASSED
+Expected Pass all: PASSED
 
 2.4 Launch Application. Disable JS on edge://settings/content/javascript. Refresh Application
-Exspected: Javascript is disabled message displayed, any Javascript buttons hidde. PASSED
+Expected: JavaScript is disabled message displayed, any JavaScript buttons hide. PASSED
 
-2.5 Chrome. Repeat tests 1.1-1.4.3 (tested edge as default in intial tests, other browsers not permited at work.)
-Exspected Pass all: PASSED
+2.5 Chrome. Repeat tests 1.1-1.4.3 (tested edge as default in initial tests, other browsers not permitted at work.)
+Expected Pass all: PASSED
 2.5.1 IE. Repeat tests 1.1-1.4.3
-Exspected Pass all: PASSED
+Expected Pass all: PASSED
 
 2.6 axe - Web Accessibility Testing. F12, Axe. Scan webpage
-Exspected: No critical or serious issues. PASSED
+Expected: No critical or serious issues. PASSED
 
 ----------User Guide Draft:
 Accessing Blog Posts:
-To access diffrent blog post, select the title of the post from the use the "Blog Posts" dropdown. [image of site with Blog posts highlighted]
-On smaller/mobile devices you may neen to click [image of icon] the icon to exspand the navigation bar.
+To access different blog post, select the title of the post from the use the "Blog Posts" dropdown. [image of site with Blog posts highlighted]
+On smaller/mobile devices you may need to click [image of icon] the icon to expand the navigation bar.
 
 Commenting on Blog Posts:
-In the section titled "Leave a Comment" fill in your Username, Password and Message in the specified feilds and click the "Comment" button.
-Please note that Username, Password and Message are all required feilds.
+In the section titled "Leave a Comment" fill in your Username, Password and Message in the specified fields and click the "Comment" button.
+Please note that Username, Password and Message are all required fields.
 [Image of "Leave a Comment" with example Username, Password and Message with pointer over comment button]
 
 Replying to Comments:
-To reply to comments on the site please enable Javascript (scripting) in your browser. 
+To reply to comments on the site please enable JavaScript (scripting) in your browser. 
 If you are connected to a domain, you may have to ask for group policy permission.
 
 Next to the comment you wish to reply to click the "Reply" button
 [Image of comment with pointer over Reply button]
 
-In the section titled "Leave a Reply" fill in your Username, Password and Message in the specified feilds and click the "Reply" button.
-Please note that Username, Password and Message are all required feilds.
+In the section titled "Leave a Reply" fill in your Username, Password and Message in the specified fields and click the "Reply" button.
+Please note that Username, Password and Message are all required fields.
 [Image of "Leave a Reply" with example Username, Password and Message with pointer over Reply button]
 
 ----------Technical Guide Draft:
 .NET Framework 4.8
 Data is stored inside App_Data\Blog-Posts.json
-The application is checked into source controll on github 
+The application is checked into source control on github 
 https://github.com/jasonhreid/NetC.JuniorDeveloperExam 
 Web host Server: ISS local host.
-Data Server: Within the appliaction.
-Custom Error pages can be disables in web.config to see errors
+Data Server: Within the application.
+Custom Error pages can be enabled/disabled in web.config to see errors
 
 ----------Future Improvements:
-Treat this application as a prototype and create a application using entity framework to create a code first database.
-Impliment .net users so that emails are tied to a password protected account.
-Impliment React for further Javascript functionailty.
+Treat this application as a prototype and create an application using entity framework to create a code first database.
+
+Implement .net users so that emails are tied to a password protected account.
+Implement React.
+Use navigation in _Layout with dropdown by viewbags.
+Fix issues when customErrors mode="On", currently repeatedly loads same page then gives 404.
+

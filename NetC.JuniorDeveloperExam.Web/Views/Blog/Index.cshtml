@@ -1,18 +1,21 @@
 ﻿@using NetC.JuniorDeveloperExam.Web.Classes;
 @model vmBlog
+
 @{
     ViewBag.Title = Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().title;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 5 Considerations for a Content-First Design Approach - NetConstruct Blog</title>
+    <title>@ViewBag.Title</title>
     <link rel="stylesheet" type="text/css" href="/Assets/Styles/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/Assets/Styles/custom.css" />
 </head>
+
 <body onload="jsCheckDisabled()">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -21,6 +24,7 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
@@ -29,12 +33,14 @@
                             <span class="sr-only">(current)</span>
                         </a>
                     </li>
+
                     <li>
                         <ul class="navbar-nav navbar-dark bg-dark">
                             <li class="nav-item dropdown position-static">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Blog Posts
                                 </a>
+
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto;">
                                     @foreach (BlogPost blogPosts in Model.ListOfBlogPost)
                                     {
@@ -60,28 +66,22 @@
 
     <div class="container">
         <div class="row">
-
             <!-- Blog post content -->
             <div class="col-lg-12">
-
                 <!-- Title -->
                 <h1 class="mt-4">@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().title</h1>
-
                 <hr>
 
                 <!-- Date/Time -->
                 <p>@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().date</p>
-
                 <hr>
 
                 <!-- Preview Image -->
                 <img class="img-fluid rounded" src="@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().image" alt="@Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().title">
-
                 <hr>
 
                 <!-- Post Content -->
                 @Html.Raw(Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().htmlContent)
-
                 <hr>
 
                 <!-- Blog post comment form -->
@@ -117,25 +117,24 @@
 
                 @if (Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments != null)
                 {
-                    var comments = Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments;
-                    //for (int i = 0; i < comments.Count(); i++)
-                    for (int i = comments.Count() - 1; i >= 0; i--)
-                    {
-                        <div class="media mb-4" id="@comments[i].id">
-                            <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
-                            <div class="media-body">
-                                <h5 class="mt-0">@comments[i].name <small><em>(@comments[i].date)</em></small></h5>
-                                @comments[i].message
-                            </div>
-                            <button id="@("ReplyBtn"+comments[i].id)" class="btn btn-primary jsDisabledHide" onclick="Reply(@comments[i].id)">Reply</button>
-                        </div>
+                     var comments = Model.ListOfBlogPost.Where(bp => bp.id == Model.SelectedBlogPostID).FirstOrDefault().comments;
+                     //for (int i = 0; i < comments.Count(); i++)
+                     for (int i = comments.Count() - 1; i >= 0; i--)
+                     {
+                         <div class="media mb-4" id="@comments[i].id">
+                             <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
+                                <div class="media-body">
+                                    <h5 class="mt-0">@comments[i].name <small><em>(@comments[i].date)</em></small></h5>
+                                    @comments[i].message
+                                </div>
+                             <button id="@("ReplyBtn"+comments[i].id)" class="btn btn-primary jsDisabledHide" onclick="Reply(@comments[i].id)">Reply</button>
+                         </div>
 
 
                         //  <!-- Comment reply form -->
                         <div class="card my-3 reply-box d-none" id="@("Reply"+comments[i].id)">
                             <h5 class="card-header">Leave a Reply:</h5>
                             <div class="card-body">
-                                @*<p>TODO hide show and template for form content, pass in reply/comment for submit btn</p>*@
                                 @using (Html.BeginForm("CommentReply", "Blog", new { id = Model.SelectedBlogPostID, commentId = comments[i].id }, FormMethod.Post, null))
                                 {
                                     <div class="form-row">
@@ -156,22 +155,25 @@
                                     <button type="submit" class="btn btn-primary">Reply</button>
                                 }
                             </div>
-                            </div>
+                        </div>
 
+                         if (comments[i].replies != null)
+                         {
+                            <div style="padding-left: 1.25em">
+                                 @foreach (Reply reply in comments[i].replies.OrderByDescending(c => c.date).ToList())
+                                 {
+                                     <div class="media mb-4">
+                                         <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
+                                         <div class="media-body">
+                                             <h5 class="mt-0">@reply.name <small><em>(@reply.date)</em></small></h5>
+                                             @reply.message
+                                         </div>
+                                     </div>
+                                 }
+                             </div>
+                         }
 
-                            if (comments[i].replies != null)
-                            {<div style="padding: 1.25em">
-                                    @foreach (Reply reply in comments[i].replies.OrderByDescending(c => c.date).ToList())
-                                    {
-                                        <div class="media mb-4">
-                                            <img class="d-flex mr-3 rounded-circle user-avatar" src=@("https://eu.ui-avatars.com/api/?name=" + comments[i].name.Replace(" ", "+")) alt="@comments[i].name">
-                                            <div class="media-body">
-                                                <h5 class="mt-0">@reply.name <small><em>(@reply.date)</em></small></h5>
-                                                @reply.message
-                                            </div>
-                                        </div>
-                                    }
-                                </div>}
+                        //Seperates comments, but doesn't add hr after last comment
                         if (i != 0)
                         {
                             <hr />

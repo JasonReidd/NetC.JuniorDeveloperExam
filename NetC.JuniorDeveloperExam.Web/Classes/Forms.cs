@@ -5,6 +5,9 @@ using System.Web;
 
 namespace NetC.JuniorDeveloperExam.Web.Classes
 {
+    /// <summary>
+    /// Form for commenting and replying
+    /// </summary>
     public class FormData
     {
         public string Name { get; set; }

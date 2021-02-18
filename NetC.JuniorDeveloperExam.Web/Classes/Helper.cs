@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -9,9 +10,14 @@ namespace NetC.JuniorDeveloperExam.Web.Classes
 {
     public class Helper
     {
+        /// <summary>
+        /// If form contains no null values return true
+        /// </summary>
+        /// <param name="formData">Comment/reply data</param>
+        /// <returns></returns>
         public static bool containsNoNulls(FormData formData)
         {
-            if(formData != null)
+            if (formData != null)
             {
                 if (formData.Date == null || formData.Email == null || formData.Message == null || formData.Name == null)
                 {
@@ -21,8 +27,9 @@ namespace NetC.JuniorDeveloperExam.Web.Classes
             }
             return false;
         }
+
         /// <summary>
-        /// Checks if email is valid and returns Bool
+        /// If email is valid return tue
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
@@ -69,6 +76,33 @@ namespace NetC.JuniorDeveloperExam.Web.Classes
                 return false;
             }
         }
-     
+
+        /// <summary>
+        /// Gets JSON from path
+        /// </summary>
+        /// <param name="path">Full path including file name</param>
+        /// <returns></returns>
+        public string JSONRead(string path)
+        {
+            string jsonResult;
+            using (StreamReader streamReader = new StreamReader(path))
+            {
+                jsonResult = streamReader.ReadToEnd();
+            }
+            return jsonResult;
+        }
+
+        /// <summary>
+        /// Writes JSONString to path
+        /// </summary>
+        /// <param name="path">Full path including file name</param>
+        /// <param name="jSONString">JSON to write to file</param>
+        public void JSONWrite(string path, string jSONString)
+        {
+            using (var streamWriter = File.CreateText(path))
+            {
+                streamWriter.Write(jSONString);
+            }
+        }
     }
 }

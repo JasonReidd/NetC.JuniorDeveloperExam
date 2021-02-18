@@ -10,17 +10,19 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
     {
         // mysite
         // mysite/Blog
-        // mysite/Blog/BlogPost/{1?}
+        // mysite/Blog/Index/{1?}
         /// <summary>
         /// Displays blog. Defaults to first if no valid id given
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult BlogPost(int id = 1)
+        public ActionResult Index(int id = 1)
         {
             //gets content from Blog-Posts.json
-            var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
-            Root rootObj = JsonConvert.DeserializeObject<Root>(System.IO.File.ReadAllText(path));
+            Helper helper = new Helper();
+            var path = Server.MapPath("~/App_Data/Blog-Posts.json");
+            Root rootObj = JsonConvert.DeserializeObject<Root>(helper.JSONRead(path));
+
             //if invalid id (SelectedBlogPostID) default to 1
             if (rootObj.blogPosts.Where(bp => bp.id == id) == null)
             {
@@ -44,10 +46,10 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                     comment.id = newid;
                     newid++;
                 }
-                var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
-                System.IO.File.WriteAllText(path, convertedJson);
-
             }
+
+            var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
+            helper.JSONWrite(path, convertedJson);
 
             //creates a view model
             vmBlog model = new vmBlog()
@@ -78,10 +80,11 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             }
 
             //gets content from Blog-Posts.json
+            Helper helper = new Helper();
             var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
-            Root rootObj = JsonConvert.DeserializeObject<Root>(System.IO.File.ReadAllText(path));
-            //adds new comment to content
+            Root rootObj = JsonConvert.DeserializeObject<Root>(helper.JSONRead(path));
 
+            //aggregate comments to make it possible to get Max id
             List<Comment> aggregate = new List<Comment>();
             foreach (BlogPost blogPost in rootObj.blogPosts)
             {
@@ -91,6 +94,7 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                 }
             }
 
+            //adds new comment to content
             rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Add(new Comment()
             {
                 id = aggregate.Max(a => a.id) + 1,
@@ -100,11 +104,12 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                 date = formData.Date,
                 replies = new List<Reply>()
             });
+
             //saves content to Blog-Posts.json
             var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
-            System.IO.File.WriteAllText(path, convertedJson);
+            helper.JSONWrite(path, convertedJson);
             //redirect to Blog and retain id
-            return RedirectToAction("BlogPost", "Blog", new { id = id });
+            return RedirectToAction("Index", "Blog", new { id = id });
         }
 
         /// <summary>
@@ -120,15 +125,20 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
             //serverside validation 
             if (!Helper.containsNoNulls(formData))
             {
-                throw new System.Exception("Form Validation Error.");
+                TempData["Error"] = "Form Validation Error.";
+                return RedirectToAction("Index", "Blog", new { id = 1 });
             }
             if (!Helper.IsValidEmail(formData.Email))
             {
-                throw new System.Exception("Email Validation Error.");
+                TempData["Error"] = "Email Validation Error.";
+                return RedirectToAction("Index", "Blog", new { id = 1 });
             }
+
             //gets content from Blog-Posts.json
+            Helper helper = new Helper();
             var path = Server.MapPath(@"~/App_Data/Blog-Posts.json");
-            Root rootObj = JsonConvert.DeserializeObject<Root>(System.IO.File.ReadAllText(path));
+            Root rootObj = JsonConvert.DeserializeObject<Root>(helper.JSONRead(path));
+
             //adds new comment to content
             rootObj.blogPosts.Where(bp => bp.id == id).FirstOrDefault().comments.Where(c => c.id == commentId).FirstOrDefault().replies.Add(new Reply()
             {
@@ -137,12 +147,13 @@ namespace NetC.JuniorDeveloperExam.Web.Controllers
                 message = formData.Message,
                 date = formData.Date,
             });
+
             //saves content to Blog-Posts.json
             var convertedJson = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
-            System.IO.File.WriteAllText(path, convertedJson);
-            //redirect to Blog and retain id
-            return RedirectToAction("BlogPost", "Blog", new { id = id });
-        }
+            helper.JSONWrite(path, convertedJson);
 
+            //redirect to Blog and retain id
+            return RedirectToAction("Index", "Blog", new { id = id });
+        }
     }
 }
